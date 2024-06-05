@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import TodoList from "./components/TodoList";
+import TodoCreate from "./components/TodoCreate";
+import "./App.css";
 
 function App() {
+  const [todos, setTodos] = useState([]);
+
+  const createTodo = (title) => {
+    const newTodo = { id: crypto.randomUUID(), title: title, completed: false };
+    const updatedTodo = [...todos, newTodo];
+    setTodos(updatedTodo);
+  };
+
+  const removeTodo = (id) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+  };
+
+  const changeTodo = (id, title, completed = false) => {
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, title, completed } : todo
+    );
+    setTodos(updatedTodos);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className="main">
+      <h1>
+        React Todo <span>Optimise your day with Todo List!</span>
+      </h1>
+      <TodoList todos={todos} removeTodo={removeTodo} changeTodo={changeTodo} />
+      <TodoCreate createTodo={createTodo} />
+    </main>
   );
 }
 
